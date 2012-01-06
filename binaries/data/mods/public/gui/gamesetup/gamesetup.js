@@ -386,6 +386,10 @@ function initCivNameList()
 
 	var civListNames = [ civ.name for each (civ in civList) ];
 	var civListCodes = [ civ.code for each (civ in civList) ];
+	
+	// Add random to the end of the list.
+	civListNames.push("[color=\"140 140 140 255\"]Random");
+	civListCodes.push("Random");
 
 	// Update the dropdowns
 	for (var i = 0; i < MAX_PLAYERS; ++i)
@@ -722,6 +726,13 @@ function launchGame()
 			if (assignBox.list_data[assignBox.selected] == "local")
 			{
 				playerID = i+1;
+			}
+			// while we are at it, we should assign a proper civilization if "Random" was selected
+			var civBox = getGUIObjectByName("playerCiv["+i+"]");
+			if (civBox.list_data[civBox.selected] == "Random")
+			{
+				// "Random" is always the last element; if not this logic has to change
+				g_GameAttributes.settings.PlayerData[i].Civ = civBox.list_data[Math.floor(Math.random()*(civBox.list_data.length-1))];
 			}
 		}
 		// Remove extra player data

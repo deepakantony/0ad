@@ -374,6 +374,11 @@ function initCivNameList()
 {
 	// Cache civ data
 	g_CivData = loadCivData();
+	g_CivData['Random'] = {
+		Code : 'Random',
+		Name : 'Random',
+		SelectableInGameSetup : true
+	};
 
 	// Extract name/code, and skip civs that are explicitly disabled
 	// (intended for unusable incomplete civs)
@@ -908,6 +913,7 @@ function onGameAttributesChange()
 
 				// Set dropdown values
 				pCiv.selected = (civ ? pCiv.list_data.indexOf(civ) : 0);
+				//pCiv.list_data["random"] = {Code:"Random", Name:"Random"};
 				pTeam.selected = (team !== undefined && team >= 0) ? team+1 : 0;
 			}
 		}

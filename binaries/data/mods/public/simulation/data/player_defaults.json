@@ -9,49 +9,49 @@
 		},
 		{
 			"Name": "Player 1",
-			"Civ": "hele",
+			"Civ": "random",
 			"Colour": { "r": 80, "g": 80, "b": 200 },
 			"AI": ""
 		},
 		{
 			"Name": "Player 2",
-			"Civ": "hele",
+			"Civ": "random",
 			"Colour": { "r": 150, "g": 20, "b": 20 },
 			"AI": "qbot"
 		},
 		{
 			"Name": "Player 3",
-			"Civ": "hele",
+			"Civ": "random",
 			"Colour": { "r": 50, "g": 165, "b": 5 },
 			"AI": "qbot"
 		},
 		{
 			"Name": "Player 4",
-			"Civ": "hele",
+			"Civ": "random",
 			"Colour": { "r": 230, "g": 230, "b": 75 },
 			"AI": "qbot"
 		},
 		{
 			"Name": "Player 5",
-			"Civ": "hele",
+			"Civ": "random",
 			"Colour": { "r": 50, "g": 170, "b": 170 },
 			"AI": "qbot"
 		},
 		{
 			"Name": "Player 6",
-			"Civ": "hele",
+			"Civ": "random",
 			"Colour": { "r": 160, "g": 80, "b": 200 },
 			"AI": "qbot"
 		},
 		{
 			"Name": "Player 7",
-			"Civ": "hele",
+			"Civ": "random",
 			"Colour": { "r": 235, "g": 120, "b": 20 },
 			"AI": "qbot"
 		},
 		{
 			"Name": "Player 8",
-			"Civ": "hele",
+			"Civ": "random",
 			"Colour": { "r": 64, "g": 64, "b": 64 },
 			"AI": "qbot"
 		}

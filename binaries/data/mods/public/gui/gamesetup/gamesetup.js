@@ -3,6 +3,12 @@
 const DEFAULT_NETWORKED_MAP = "Median Oasis";
 const DEFAULT_OFFLINE_MAP = "Oasis";
 
+const RANDOM_CIV = {
+	Code: "random",
+	// Color is orangish to make it look selectable and different from others.
+	Name: "[color=\"255 160 10 255\"]Random"
+};
+
 // TODO: Move these somewhere like simulation\data\game_types.json, Atlas needs them too
 const VICTORY_TEXT = ["Conquest", "None"];
 const VICTORY_DATA = ["conquest", "endless"];
@@ -387,9 +393,9 @@ function initCivNameList()
 	var civListNames = [ civ.name for each (civ in civList) ];
 	var civListCodes = [ civ.code for each (civ in civList) ];
 	
-	// Add random to the end of the list.
-	civListNames.push("[color=\"140 140 140 255\"]Random");
-	civListCodes.push("Random");
+	// Add random to the beginning of the list. 
+	civListNames.unshift(RANDOM_CIV.Name);
+	civListCodes.unshift(RANDOM_CIV.Code);
 
 	// Update the dropdowns
 	for (var i = 0; i < MAX_PLAYERS; ++i)
@@ -709,7 +715,19 @@ function launchGame()
 	{
 		return;
 	}
-
+	
+	var numPlayers = g_GameAttributes.settings.PlayerData.length;
+	// We should assign a proper civilization if "random" was selected
+	for (var i = 0; i < numPlayers; ++i)
+	{
+		var civBox = getGUIObjectByName("playerCiv["+i+"]");
+		if (civBox.list_data[civBox.selected] == RANDOM_CIV.Code)
+		{
+			// "Random" is always the first element; if not this logic has to change
+			g_GameAttributes.settings.PlayerData[i].Civ = civBox.list_data[Math.floor(Math.random()*(civBox.list_data.length-1))+1];
+		}
+	}
+	
 	if (g_IsNetworked)
 	{
 		Engine.SetNetworkGameAttributes(g_GameAttributes);
@@ -718,7 +736,6 @@ function launchGame()
 	else
 	{
 		// Find the player ID which the user has been assigned to
-		var numPlayers = g_GameAttributes.settings.PlayerData.length;
 		var playerID = -1;
 		for (var i = 0; i < numPlayers; ++i)
 		{
@@ -726,13 +743,6 @@ function launchGame()
 			if (assignBox.list_data[assignBox.selected] == "local")
 			{
 				playerID = i+1;
-			}
-			// while we are at it, we should assign a proper civilization if "Random" was selected
-			var civBox = getGUIObjectByName("playerCiv["+i+"]");
-			if (civBox.list_data[civBox.selected] == "Random")
-			{
-				// "Random" is always the last element; if not this logic has to change
-				g_GameAttributes.settings.PlayerData[i].Civ = civBox.list_data[Math.floor(Math.random()*(civBox.list_data.length-1))];
 			}
 		}
 		// Remove extra player data
@@ -906,8 +916,9 @@ function onGameAttributesChange()
 				pTeamText.hidden = false;
 				pTeam.hidden = true;
 
-				// Set text values
-				pCivText.caption = g_CivData[civ].Name;
+				// Set text values.
+				// Since g_CivData only contains valid civilizations, take care of the case when "Random" is selected.
+				pCivText.caption = (g_CivData[civ] ? g_CivData[civ].Name : RANDOM_CIV.Name);
 				pTeamText.caption = (team !== undefined && team >= 0) ? team+1 : "-";
 			}
 			else if (g_GameAttributes.mapType == "random")

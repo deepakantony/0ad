@@ -7,7 +7,7 @@
   </Armour>
   <Attack>
     <Ranged>
-      <Pierce>40.0</Pierce>
+      <Pierce>50.0</Pierce>
 	  <Bonuses>
 		<BonusPrimary>
 		  <Classes>Infantry Bow</Classes>
@@ -29,7 +29,7 @@
     </Resources>
   </Cost>
   <Health>
-    <Max>450</Max>
+    <Max>1000</Max>
     <RegenRate>0.5</RegenRate>
   </Health>
   <Identity>

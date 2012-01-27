@@ -249,23 +249,6 @@ extern_lib_defs = {
 			})
 		end,
 	},
-	devil = {
-		compile_settings = function()
-			if os.is("windows") then
-				add_default_include_paths("devil")
-			end
-		end,
-		link_settings = function()
-			-- On Windows, it uses #pragma comment(lib ...) to link the library,
-			-- so we only need to include the library-search-path
-			if os.is("windows") then
-				add_default_lib_paths("devil")
-			end
-			add_default_links({
-				unix_names = { "IL", "ILU" },
-			})
-		end,
-	},
 	enet = {
 		compile_settings = function()
 			if not _OPTIONS["with-system-enet"] then
@@ -453,18 +436,29 @@ extern_lib_defs = {
 	sdl = {
 		compile_settings = function()
 			if os.is("windows") then
-				add_default_include_paths("sdl")
+				includedirs { libraries_dir .. "sdl/include/SDL" }
 			else
+
+				-- Support SDL_CONFIG for overriding for the default PATH-based sdl-config
+				sdl_config_path = os.getenv("SDL_CONFIG")
+				if not sdl_config_path then
+					sdl_config_path = "sdl-config"
+				end
+
 				-- "pkg-config sdl --libs" appears to include both static and dynamic libs
 				-- when on MacPorts, which is bad, so use sdl-config instead
-				pkgconfig_cflags(nil, "sdl-config --cflags")
+				pkgconfig_cflags(nil, sdl_config_path.." --cflags")
 			end
 		end,
 		link_settings = function()
 			if os.is("windows") then
 				add_default_lib_paths("sdl")
 			else
-				pkgconfig_libs(nil, "sdl-config --libs")
+				sdl_config_path = os.getenv("SDL_CONFIG")
+				if not sdl_config_path then
+					sdl_config_path = "sdl-config"
+				end
+				pkgconfig_libs(nil, sdl_config_path.." --libs")
 			end
 		end,
 	},
@@ -551,23 +545,6 @@ extern_lib_defs = {
 			add_default_links({
 				win_names  = { },
 				unix_names = { "X11" },
-			})
-		end,
-	},
-	xerces = {
-		compile_settings = function()
-			if os.is("windows") then
-				add_default_include_paths("xerces")
-			end
-		end,
-		link_settings = function()
-			if os.is("windows") then
-				add_default_lib_paths("xerces")
-			end
-			add_default_links({
-				win_names  = { "xerces-c_2" },
-				unix_names = { "xerces-c" },
-				no_delayload = 1,
 			})
 		end,
 	},

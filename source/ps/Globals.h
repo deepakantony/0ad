@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Wildfire Games.
+/* Copyright (C) 2012 Wildfire Games.
  * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
@@ -21,6 +21,8 @@
 #include "lib/input.h"
 #include "lib/frequency_filter.h"
 
+#include <map>
+
 // thin abstraction layer on top of SDL.
 // game code should use it instead of SDL_GetMouseState etc. because
 // Atlas does not completely emulate SDL (it can only send events).
@@ -41,7 +43,7 @@ extern bool g_mouse_active;
  * it represents a pressed key.
  * Updated by GlobalsInputHandler in response to key press/release events.
  */
-extern bool g_keys[];
+extern std::map<int32_t, bool> g_keys;
 
 /**
  * g_mouse_buttons: Mouse buttons states, indexed by SDL_BUTTON_* constants.

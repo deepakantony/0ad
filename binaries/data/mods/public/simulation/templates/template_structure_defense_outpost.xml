@@ -2,16 +2,16 @@
 <Entity parent="template_structure_civic">
   <Armour>
     <Hack>5.0</Hack>
-    <Pierce>20.0</Pierce>
-    <Crush>10.0</Crush>
+    <Pierce>5.0</Pierce>
+    <Crush>5.0</Crush>
   </Armour>
   <Attack disable=""/>
   <BuildRestrictions>
     <Territory>neutral</Territory>
-    <Category>ScoutTower</Category>
+    <Category>House</Category>
   </BuildRestrictions>
   <Cost>
-    <BuildTime>50</BuildTime>
+    <BuildTime>40</BuildTime>
     <Resources>
       <wood>100</wood>
       <stone>0</stone>
@@ -28,7 +28,7 @@
 	<BuffHeal>1</BuffHeal>
   </GarrisonHolder>
   <Health>
-    <Max>500</Max>
+    <Max>800</Max>
   </Health>
   <Identity>
     <GenericName>Outpost</GenericName>
@@ -39,6 +39,7 @@
   <Obstruction>
     <Static width="6.0" depth="6.0"/>
   </Obstruction>
+  <RallyPoint disable=""/>
   <Sound>
     <SoundGroups>
       <select>interface/select/building/sel_tower.xml</select>

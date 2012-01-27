@@ -1,7 +1,7 @@
 newoption { trigger = "atlas", description = "Include Atlas scenario editor projects" }
 newoption { trigger = "collada", description = "Include COLLADA projects (requires FCollada library)" }
 newoption { trigger = "coverage", description = "Enable code coverage data collection (GCC only)" }
-newoption { trigger = "aoe3ed", description = "Include AoE3Ed" }
+newoption { trigger = "gles", description = "Use non-working OpenGL ES 2.0 mode" }
 newoption { trigger = "icc", description = "Use Intel C++ Compiler (Linux only; should use either \"--cc icc\" or --without-pch too, and then set CXX=icpc before calling make)" }
 newoption { trigger = "outpath", description = "Location for generated project files" }
 newoption { trigger = "without-tests", description = "Disable generation of test projects" }
@@ -28,6 +28,8 @@ else
 	arch = os.getenv("HOSTTYPE")
 	if arch == "x86_64" then
 		arch = "amd64"
+	elseif arch == "arm" then
+		arch = "arm"
 	else
 		os.execute("gcc -dumpmachine > .gccmachine.tmp")
 		local f = io.open(".gccmachine.tmp", "r")
@@ -142,6 +144,10 @@ function project_set_build_flags()
 
 	configuration { }
 
+	if _OPTIONS["gles"] then
+		defines { "CONFIG2_GLES=1" }
+	end
+
 	-- required for the lowlevel library. must be set from all projects that use it, otherwise it assumes it is
 	-- being used as a DLL (which is currently not the case in 0ad)
 	defines { "LIB_STATIC_LINK" }
@@ -201,14 +207,23 @@ function project_set_build_flags()
 				-- do something (?) so that ccache can handle compilation with PCH enabled
 				"-fpch-preprocess",
 
-				-- enable SSE intrinsics
-				"-msse",
-
 				-- don't omit frame pointers (for now), because performance will be impacted
 				-- negatively by the way this breaks profilers more than it will be impacted
 				-- positively by the optimisation
 				"-fno-omit-frame-pointer"
 			}
+
+			if arch == "x86" or arch == "amd64" then
+				buildoptions {
+					-- enable SSE intrinsics
+					"-msse"
+				}
+			end
+
+			if arch == "arm" then
+				-- disable warnings about va_list ABI change
+				buildoptions { "-Wno-psabi" }
+			end
 
 			if os.is("linux") then
 				linkoptions { "-Wl,--no-undefined", "-Wl,--as-needed" }
@@ -285,6 +300,19 @@ function project_create(project_name, target_type)
 
 	project_set_target(project_name)
 	project_set_build_flags()
+end
+
+
+-- OSX creates a .app bundle if the project type of the main application is set to "WindowedApp".
+-- We don't want this because this bundle would be broken (it lacks all the resources and external dependencies, Info.plist etc...)
+-- Windows opens a console in the background if it's set to ConsoleApp, which is not what we want.
+-- I didn't check if this setting matters for linux, but WindowedApp works there.
+function get_main_project_target_type()
+	if os.is("macosx") then
+		return "ConsoleApp"
+	else
+		return "WindowedApp"		
+	end
 end
 
 
@@ -644,7 +672,7 @@ used_extern_libs = {
 -- Bundles static libs together with main.cpp and builds game executable.
 function setup_main_exe ()
 
-	local target_type = "WindowedApp"
+	local target_type = get_main_project_target_type()
 	project_create("pyrogenesis", target_type)
 
 	links { "mocks_real" }
@@ -730,10 +758,6 @@ function setup_atlas_project(project_name, target_type, rel_source_dirs, rel_inc
 	project_add_contents(source_root, rel_source_dirs, rel_include_dirs, extra_params)
 	project_add_extern_libs(extern_libs, target_type)
 
-	if _OPTIONS["aoe3ed"] then
-		defines { "USE_AOE3ED" }
-	end
-
 	-- Platform Specifics
 	if os.is("windows") then
 		defines { "_UNICODE" }
@@ -812,12 +836,6 @@ function setup_atlas_projects()
 		"AtlasObject",
 		"AtlasScript",
 	}
-	if _OPTIONS["aoe3ed"] then
-		table.insert(atlas_src, "ArchiveViewer")
-		table.insert(atlas_src, "FileConverter")
-		table.insert(atlas_extra_links, "DatafileIO")
-		table.insert(atlas_extra_links, "xerces-c")
-	end
 
 	atlas_extern_libs = {
 		"boost",
@@ -830,9 +848,6 @@ function setup_atlas_projects()
 		"x11",
 		"zlib",
 	}
-	if _OPTIONS["aoe3ed"] then
-		table.insert(atlas_extern_libs, "devil")
-	end
 
 	setup_atlas_project("AtlasUI", "SharedLib", atlas_src,
 	{	-- include
@@ -847,32 +862,13 @@ function setup_atlas_projects()
 		extra_links = atlas_extra_links,
 		extra_files = { "Misc/atlas.rc" }
 	})
-
-	if _OPTIONS["aoe3ed"] then
-		setup_atlas_project("DatafileIO", "StaticLib",
-		{	-- src
-			".",
-			"BAR",
-			"DDT",
-			"SCN",
-			"Stream",
-			"XMB"
-		},{	-- include
-		},{	-- extern_libs
-			"devil",
-			"xerces",
-			"zlib"
-		},{	-- extra_params
-		})
-	end
-
 end
 
 
 -- Atlas 'frontend' tool-launching projects
 function setup_atlas_frontend_project (project_name)
 
-	local target_type = "WindowedApp"
+	local target_type = get_main_project_target_type()
 	project_create(project_name, target_type)
 	project_add_extern_libs({
 		"spidermonkey",
@@ -899,9 +895,6 @@ function setup_atlas_frontend_project (project_name)
 		project_add_manifest()
 
 	else -- Non-Windows, = Unix
-		if _OPTIONS["aoe3ed"] then
-			links { "DatafileIO" }
-		end
 		links { "AtlasObject" }
 	end
 
@@ -911,10 +904,6 @@ end
 
 function setup_atlas_frontends()
 	setup_atlas_frontend_project("ActorEditor")
-	if _OPTIONS["aoe3ed"] then
-		setup_atlas_frontend_project("ArchiveViewer")
-		setup_atlas_frontend_project("FileConverter")
-	end
 end
 
 
@@ -1064,7 +1053,7 @@ end
 
 function setup_tests()
 
-	local target_type = "WindowedApp"
+	local target_type = get_main_project_target_type()
 	project_create("test", target_type)
 
 	configure_cxxtestgen()

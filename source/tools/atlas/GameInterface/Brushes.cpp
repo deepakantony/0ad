@@ -26,6 +26,8 @@
 #include "lib/ogl.h"
 #include "maths/MathUtil.h"
 #include "renderer/TerrainOverlay.h"
+#include "simulation2/Simulation2.h"
+#include "simulation2/system/SimContext.h"
 
 using namespace AtlasMessage;
 
@@ -33,7 +35,7 @@ class BrushTerrainOverlay : public TerrainOverlay
 {
 public:
 	BrushTerrainOverlay(const Brush* brush)
-		: TerrainOverlay(300), m_Brush(brush)
+		: TerrainOverlay(g_Game->GetSimulation2()->GetSimContext(), 300), m_Brush(brush)
 	{
 	}
 
@@ -90,8 +92,8 @@ void Brush::SetData(ssize_t w, ssize_t h, const std::vector<float>& data)
 void Brush::GetCentre(ssize_t& x, ssize_t& y) const
 {
 	CVector3D c = m_Centre;
-	if (m_W % 2) c.X += CELL_SIZE/2.f;
-	if (m_H % 2) c.Z += CELL_SIZE/2.f;
+	if (m_W % 2) c.X += TERRAIN_TILE_SIZE/2.f;
+	if (m_H % 2) c.Z += TERRAIN_TILE_SIZE/2.f;
 	ssize_t cx, cy;
 	CTerrain::CalcFromPosition(c, cx, cy);
 

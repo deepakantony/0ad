@@ -1,4 +1,4 @@
-/* Copyright (C) 2009 Wildfire Games.
+/* Copyright (C) 2012 Wildfire Games.
  * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
@@ -18,13 +18,13 @@
 #include "precompiled.h"
 #include "Globals.h"
 
-#include "lib/external_libraries/sdl.h"
+#include "lib/external_libraries/libsdl.h"
 
 
 bool g_app_minimized = false;
 bool g_app_has_focus = true;
 
-bool g_keys[SDLK_LAST] = {0};
+std::map<int32_t, bool> g_keys;
 int g_mouse_x = 50, g_mouse_y = 50;
 bool g_mouse_active = true;
 
@@ -69,15 +69,7 @@ InReaction GlobalsInputHandler(const SDL_Event_* ev)
 
 	case SDL_KEYDOWN:
 	case SDL_KEYUP:
-		c = ev->ev.key.keysym.sym;
-		if(c < ARRAY_SIZE(g_keys))
-			g_keys[c] = (ev->ev.type == SDL_KEYDOWN);
-		else
-		{
-			// don't complain: this happens when the hotkey system
-			// spoofs keys (it assigns values starting from SDLK_LAST)
-			//debug_warn(L"invalid key");
-		}
+		g_keys[ev->ev.key.keysym.sym] = (ev->ev.type == SDL_KEYDOWN);
 		return IN_PASS;
 
 	default:

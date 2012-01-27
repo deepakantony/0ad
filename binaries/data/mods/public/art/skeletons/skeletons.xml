@@ -1028,4 +1028,181 @@ This skeleton is for the deer and any other similiar shaped animals with the exa
 			</bone>
 		</bone>
     </skeleton>
+	
+	<standard_skeleton title="Sheep" id="Sheep">
+		<bone name="ThreeBagsFull">
+			<bone name="Neck">
+				<bone name="Head" />
+			</bone>
+			<bone name="Body_Front">
+				<bone name="Body_Rear">
+					<bone name="Pelvis_Left">
+						<bone name="Leg_Left">
+							<bone name="Shin_Left">
+								<bone name="Foot_Left" />
+							</bone>
+						</bone>
+					</bone>
+					<bone name="Pelvis_Right">
+						<bone name="Leg_Right">
+							<bone name="Shin_Right">
+								<bone name="Foot_Right" />
+							</bone>
+						</bone>
+					</bone>
+					<bone name="Butt">
+						<bone name="Tail" />
+					</bone>
+				</bone>
+			</bone>
+			<bone name="Shoulder_Left">
+				<bone name="Arm_Left">
+					<bone name="Forearm_Left">
+						<bone name="Hand_Left" />
+					</bone>
+				</bone>
+			</bone>
+			<bone name="Shoulder_Right">
+				<bone name="Arm_Right">
+					<bone name="Forearm_Right">
+						<bone name="Hand_Right" />
+					</bone>
+				</bone>
+			</bone>
+		</bone>
+	</standard_skeleton>
+
+	<skeleton title="Sheep" target="Sheep"><identifier><root>ThreeBagsFull</root></identifier>
+		<bone name="ThreeBagsFull"><target>ThreeBagsFull</target>
+			<bone name="Neck"><target>Neck</target>
+				<bone name="Head"><target>Head</target></bone>
+			</bone>
+			<bone name="Body_Front"><target>Body_Front</target>
+				<bone name="Body_Rear"><target>Body_Rear</target>
+					<bone name="Pelvis_Left"><target>Pelvis_Left</target>
+						<bone name="Leg_Left"><target>Leg_Left</target>
+							<bone name="Shin_Left"><target>Shin_Left</target>
+								<bone name="Foot_Left"><target>Foot_Left</target></bone>
+							</bone>
+						</bone>
+					</bone>
+					<bone name="Pelvis_Right"><target>Pelvis_Right</target>
+						<bone name="Leg_Right"><target>Leg_Right</target>
+							<bone name="Shin_Right"><target>Shin_Right</target>
+								<bone name="Foot_Right"><target>Foot_Right</target></bone>
+							</bone>
+						</bone>
+					</bone>
+					<bone name="Butt"><target>Butt</target>
+						<bone name="Tail"><target>Tail</target></bone>
+					</bone>
+				</bone>
+			</bone>
+			<bone name="Shoulder_Left"><target>Shoulder_Left</target>
+				<bone name="Arm_Left"><target>Arm_Left</target>
+					<bone name="Forearm_Left"><target>Forearm_Left</target>
+						<bone name="Hand_Left"><target>Hand_Left</target></bone>
+					</bone>
+				</bone>
+			</bone>
+			<bone name="Shoulder_Right"><target>Shoulder_Right</target>
+				<bone name="Arm_Right"><target>Arm_Right</target>
+					<bone name="Forearm_Right"><target>Forearm_Right</target>
+						<bone name="Hand_Right"><target>Hand_Right</target></bone>
+					</bone>
+				</bone>
+			</bone>
+		</bone>
+	</skeleton>
+	
+    <standard_skeleton title="Ballista Weapon" id="ballista"> 
+                <bone name="main"> 
+                    <bone name="weapon"></bone> 
+						<bone name="lever"></bone>
+						<bone name="arm_left"></bone>
+						<bone name="arm_right"></bone>
+						<bone name="sling_left"></bone>
+						<bone name="sling"></bone>
+						<bone name="sling_right"></bone>
+                </bone> 
+	</standard_skeleton> 
+ 
+	<skeleton title="Ballista Weapon" target="ballista"> 
+                <identifier> 
+                        <root>ballista</root> 
+                </identifier> 
+                <bone name="main"><target>main</target> 
+                    <bone name="weapon"><target>weapon</target></bone> 
+						<bone name="lever"><target>lever</target></bone>
+						<bone name="arm_left"><target>arm_left</target></bone>
+						<bone name="arm_right"><target>arm_right</target></bone>
+						<bone name="sling_left"><target>sling_left</target></bone>
+						<bone name="sling"><target>sling</target></bone>
+						<bone name="sling_right"><target>sling_right</target></bone>
+                </bone> 
+	</skeleton>
+	
+	<standard_skeleton title="Ship One Row" id="shiponerow">
+                <bone name="one_row_main">
+                        <bone name="right_top_row"></bone>
+                        <bone name="left_top_row"></bone>
+                </bone>
+	</standard_skeleton>
+	
+	<skeleton title="Ship One Row" target="shiponerow"> 
+                <identifier> 
+                        <root>shiponerow</root> 
+                </identifier> 
+                <bone name="one_row_main"><target>one_row_main</target> 
+                        <bone name="right_top_row"><target>right_top_row</target></bone> 
+                        <bone name="left_top_row"><target>left_top_row</target></bone> 
+                </bone> 
+	</skeleton>  
+	
+	<standard_skeleton title="Ship Two Row" id="shiptworow">
+                <bone name="two_row_main">
+                        <bone name="right_top_row"></bone>
+                        <bone name="right_bottom_row"></bone>
+                        <bone name="left_top_row"></bone>
+                        <bone name="left_bottom_row"></bone>
+                </bone>
+	</standard_skeleton>
+	
+	<skeleton title="Ship Two Row" target="shiptworow"> 
+                <identifier> 
+                        <root>shiptworow</root> 
+                </identifier> 
+                <bone name="two_row_main"><target>two_row_main</target> 
+                        <bone name="right_top_row"><target>right_top_row</target></bone> 
+                        <bone name="right_bottom_row"><target>right_bottom_row</target></bone> 
+                        <bone name="left_top_row"><target>left_top_row</target></bone> 
+                        <bone name="left_bottom_row"><target>left_bottom_row</target></bone> 
+                </bone> 
+	</skeleton>  
+	
+	<standard_skeleton title="Ship Three Row" id="shipthreerow">
+                <bone name="three_row_main">
+                        <bone name="right_top_row"></bone>
+                        <bone name="right_middle_row"></bone>
+                        <bone name="right_bottom_row"></bone>
+                        <bone name="left_top_row"></bone>
+                        <bone name="left_middle_row"></bone>
+                        <bone name="left_bottom_row"></bone>
+                </bone>
+	</standard_skeleton>
+	
+	<skeleton title="Ship Three Row" target="shipthreerow"> 
+                <identifier> 
+                        <root>shipthreerow</root> 
+                </identifier> 
+                <bone name="three_row_main"><target>three_row_main</target> 
+                        <bone name="right_top_row"><target>right_top_row</target></bone> 
+                        <bone name="right_middle_row"><target>right_middle_row</target></bone> 
+                        <bone name="right_bottom_row"><target>right_bottom_row</target></bone> 
+                        <bone name="left_top_row"><target>left_top_row</target></bone> 
+                        <bone name="left_middle_row"><target>left_middle_row</target></bone> 
+                        <bone name="left_bottom_row"><target>left_bottom_row</target></bone> 
+                </bone> 
+	</skeleton>  
+	
 </skeletons>

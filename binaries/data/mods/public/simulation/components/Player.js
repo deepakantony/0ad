@@ -1,3 +1,4 @@
+
 function Player() {}
 
 Player.prototype.Schema =
@@ -7,6 +8,7 @@ Player.prototype.Init = function()
 {
 	this.playerID = undefined;
 	this.name = undefined;	// define defaults elsewhere (supporting other languages)
+	
 	this.civ = undefined;
 	this.colour = { "r": 0.0, "g": 0.0, "b": 0.0, "a": 1.0 };
 	this.popUsed = 0; // population of units owned or trained by this player
@@ -52,7 +54,7 @@ Player.prototype.GetName = function()
 
 Player.prototype.SetCiv = function(civcode)
 {
-	this.civ = civcode;
+	this.civ = (civcode == 'random') ? Engine.GetRandomCiv().Code : civcode;
 };
 
 Player.prototype.GetCiv = function()

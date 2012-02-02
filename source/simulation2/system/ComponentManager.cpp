@@ -30,6 +30,8 @@
 #include "ps/CLogger.h"
 #include "ps/Filesystem.h"
 
+#include "boost/random/uniform_int.hpp"
+
 /**
  * Used for script-only message types.
  */
@@ -81,6 +83,7 @@ CComponentManager::CComponentManager(CSimContext& context, bool skipScriptFuncti
 		m_ScriptInterface.RegisterFunction<int, std::string, CComponentManager::Script_AddLocalEntity> ("AddLocalEntity");
 		m_ScriptInterface.RegisterFunction<void, int, CComponentManager::Script_DestroyEntity> ("DestroyEntity");
 		m_ScriptInterface.RegisterFunction<CScriptVal, std::wstring, CComponentManager::Script_ReadJSONFile> ("ReadJSONFile");
+		m_ScriptInterface.RegisterFunction<CScriptVal, Script_GetRandomCiv> ("GetRandomCiv");
 	}
 
 	// Define MT_*, IID_* as script globals, and store their names
@@ -944,3 +947,55 @@ CScriptVal CComponentManager::Script_ReadJSONFile(void* cbdata, std::wstring fil
 
 	return componentManager->GetScriptInterface().ReadJSONFile(path).get();
 }
+
+CScriptVal CComponentManager::Script_GetRandomCiv(void *cbdata) 
+{
+	CComponentManager* componentManager = static_cast<CComponentManager*> (cbdata);
+	if( componentManager->g_CivData.empty() )
+	{
+		componentManager->LoadCivData();
+	}
+	int randomIndex = componentManager->getRandomInt(0, componentManager->g_CivData.size()-1);
+	return componentManager->GetScriptInterface().ParseJSON(componentManager->g_CivData[randomIndex]).get();
+}
+
+void CComponentManager::LoadCivData()
+{
+	VfsPath path(L"civs/");
+	VfsPaths pathnames;
+
+	g_CivData.clear();
+
+	// Load all JSON files in civs directory
+	Status ret = vfs::GetPathnames(g_VFS, path, L"*.json", pathnames);
+	if (ret == INFO::OK)
+	{
+		for (VfsPaths::iterator it = pathnames.begin(); it != pathnames.end(); ++it)
+		{
+			// Load JSON file
+			CVFSFile file;
+			PSRETURN ret = file.Load(g_VFS, *it);
+			if (ret != PSRETURN_OK)
+			{
+				LOGERROR(L"CComponentManager::LoadCivData: Failed to load file '%ls': %hs", path.string().c_str(), GetErrorString(ret));
+			}
+			else
+			{
+				g_CivData.push_back(std::string(file.GetBuffer(), file.GetBuffer() + file.GetBufferSize()));
+			}
+		}
+	}
+	else
+	{
+		// Some error reading directory
+		wchar_t error[200];
+		LOGERROR(L"CComponentManager::LoadCivData: Error reading directory '%ls': %ls", path.string().c_str(), StatusDescription(ret, error, ARRAY_SIZE(error)));
+	}
+}
+
+int CComponentManager::getRandomInt(int min, int max)
+{
+	boost::uniform_int<> dist(min, max);
+	return dist(rng);
+}
+

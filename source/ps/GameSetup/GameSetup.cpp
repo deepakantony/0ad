@@ -65,6 +65,9 @@
 #include "renderer/ModelRenderer.h"
 
 #include "maths/MathUtil.h"
+#include "maths/Random.h"
+
+#include "boost/random/uniform_int.hpp"
 
 #include "simulation2/Simulation2.h"
 
@@ -1022,6 +1025,9 @@ bool Autostart(const CmdLineArgs& args)
 	g_Game = new CGame();
 
 	ScriptInterface& scriptInterface = g_Game->GetSimulation2()->GetScriptInterface();
+	std::vector<std::string> g_CivData = g_Game->GetSimulation2()->GetCivData();
+	WELL512 rng; // random number generator
+	boost::uniform_int<> dist(0, g_CivData.size()-1);
 
 	CScriptValRooted attrs;
 	scriptInterface.Eval("({})", attrs);
@@ -1095,7 +1101,12 @@ bool Autostart(const CmdLineArgs& args)
 			CScriptVal player;
 			scriptInterface.Eval("({})", player);
 
-			scriptInterface.SetProperty(player.get(), "Civ", std::string("hele"));
+			// Random civilization selection
+			std::string civ("hele"); // 'hele' is default in-case I couldn't pick a random civilization
+			CScriptValRooted civInfo = scriptInterface.ParseJSON(g_CivData[dist(rng)]);
+			if(!civInfo.undefined())
+				scriptInterface.GetProperty(civInfo.get(), "Code", civ);
+			scriptInterface.SetProperty(player.get(), "Civ", civ);
 			scriptInterface.SetPropertyInt(playerData.get(), i, player);
 		}
 	}

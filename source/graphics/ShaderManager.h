@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Wildfire Games.
+/* Copyright (C) 2012 Wildfire Games.
  * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@
 #include <boost/weak_ptr.hpp>
 
 #include "graphics/ShaderProgram.h"
+#include "graphics/ShaderTechnique.h"
 
 #if USE_SHADER_XML_VALIDATION
 # include "ps/XML/RelaxNG.h"
@@ -46,7 +47,16 @@ public:
 	 * @param defines key/value set of preprocessor definitions
 	 * @return loaded program, or null pointer on error
 	 */
-	CShaderProgramPtr LoadProgram(const char* name, const std::map<CStr, CStr>& defines);
+	CShaderProgramPtr LoadProgram(const char* name, const std::map<CStr, CStr>& defines = (std::map<CStr, CStr>()));
+
+	/**
+	 * Load a shader effect.
+	 * Effects can be implemented via many techniques; this returns the best usable technique.
+	 * @param name name of effect XML specification (file is loaded from shaders/effects/${name}.xml)
+	 * @param defines key/value set of preprocessor definitions
+	 * @return loaded technique, or empty technique on error
+	 */
+	CShaderTechnique LoadEffect(const char* name, const std::map<CStr, CStr>& defines = (std::map<CStr, CStr>()));
 
 private:
 	bool NewProgram(const char* name, const std::map<CStr, CStr>& defines, CShaderProgramPtr& program);

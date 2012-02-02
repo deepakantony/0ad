@@ -229,7 +229,6 @@ void Render()
 	// set up overlay mode
 	glPushAttrib(GL_ENABLE_BIT);
 	glEnable(GL_TEXTURE_2D);
-	glDisable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 
@@ -718,7 +717,7 @@ void Shutdown(int UNUSED(flags))
 #if OS_UNIX
 static void FixLocales()
 {
-#if OS_MACOSX
+#if OS_MACOSX || OS_BSD
 	// OS X requires a UTF-8 locale in LC_CTYPE so that *wprintf can handle
 	// wide characters. Peculiarly the string "UTF-8" seems to be acceptable
 	// despite not being a real locale, and it's conveniently language-agnostic,

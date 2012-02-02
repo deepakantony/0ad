@@ -1,4 +1,4 @@
-/* Copyright (C) 2011 Wildfire Games.
+/* Copyright (C) 2012 Wildfire Games.
  * This file is part of 0 A.D.
  *
  * 0 A.D. is free software: you can redistribute it and/or modify
@@ -111,6 +111,10 @@ void CShaderPass::DepthFunc(GLenum func)
 }
 
 
+CShaderTechnique::CShaderTechnique()
+{
+}
+
 CShaderTechnique::CShaderTechnique(const CShaderPass& pass)
 {
 	m_Passes.push_back(pass);
@@ -142,5 +146,4 @@ CShaderProgramPtr CShaderTechnique::GetShader(int pass)
 {
 	ENSURE(0 <= pass && pass < (int)m_Passes.size());
 	return m_Passes[pass].GetShader();
-
 }
